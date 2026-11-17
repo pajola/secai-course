@@ -2,5 +2,6 @@ torch>=2.0
 numpy
 scipy
 scikit-learn
+phantomtext
 matplotlib
 jupyterlab
