@@ -1,0 +1,18 @@
+numpy
+pandas
+scikit-learn
+matplotlib
+faker
+presidio-analyzer
+presidio-anonymizer
+python-stdnum
+pycanon
+fairlearn
+pandera
+cryptography
+jupyterlab
+# optional, notebook 4 only (ydata-profiling still imports pkg_resources)
+ydata-profiling
+setuptools<81
+# spaCy model for Presidio, after installing the above:
+#   python -m spacy download en_core_web_sm

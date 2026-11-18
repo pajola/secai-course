@@ -27,6 +27,28 @@ Loss-threshold, shadow-model and **LiRA** attacks: was this sample in the traini
 Every notebook follows the same structure: **threat model → attack → measure → defend → attack the defense**, and ends with take-aways and the original papers.
 The [module README](module-01-adversarial-ml/README.md) has a suggested order for teaching it and the parameters worth changing.
 
+## Module 2 — Data Security for AI
+
+A data risk review of one (synthetic) loan dataset, before it is allowed to train a model. You are the reviewer who signs it off, or blocks it.
+
+### 1 · Inventory and PII discovery &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-02-data-security/01_inventory_and_pii.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
+
+PII hidden in free text (IBANs, health data, ID scans), found by hand and with **Microsoft Presidio**. A **linkage attack** re-identifies 50 of 50 "de-identified" applicants; k-anonymity shows how to stop it. · [`01_inventory_and_pii.ipynb`](module-02-data-security/01_inventory_and_pii.ipynb)
+
+### 2 · Representation and bias audit &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-02-data-security/02_representation_and_bias.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
+
+Disparate impact 0.72 on historical decisions. Dropping the gender column doesn't fix it (proxies); mitigations compared with **Fairlearn**. · [`02_representation_and_bias.ipynb`](module-02-data-security/02_representation_and_bias.ipynb)
+
+### 3 · Provenance and integrity &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-02-data-security/03_provenance_and_integrity.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
+
+Checksums, **pandera** schema checks and signed manifests. 40 flipped labels (3% of the data) barely change accuracy but make the model approve 89% of weak applications. · [`03_provenance_and_integrity.ipynb`](module-02-data-security/03_provenance_and_integrity.ipynb)
+
+### 4 · The Data Risk Report &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-02-data-security/04_data_risk_report.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
+
+Every check in one `audit()`: **BLOCKED**, remediation, then **APPROVED WITH CONDITIONS**, with the report for sign-off. · [`04_data_risk_report.ipynb`](module-02-data-security/04_data_risk_report.ipynb)
+
+The [module README](module-02-data-security/README.md) describes the dataset, the open-source tools used and a suggested teaching order.
+
 *More modules coming soon.*
 
 ## How to run
@@ -36,14 +58,14 @@ The [module README](module-01-adversarial-ml/README.md) has a suggested order fo
 1. Click an **Open in Colab** button above.
 2. *Runtime → Run all*.
 
-The first cell downloads the helper file `secai_utils.py` (and, for notebook 2, installs PhantomText). The rest is preinstalled on Colab.
+The first cell downloads the module's helper file (`secai_utils.py` or `northvale.py`) and installs any tool Colab doesn't have (PhantomText, Presidio, Fairlearn, ...).
 A CPU runtime is enough; a GPU is used automatically if you pick one (*Runtime → Change runtime type*).
 
 ### On your own machine
 
 ```bash
 git clone https://github.com/pajola/secai-course.git
-cd secai-course/module-01-adversarial-ml
+cd secai-course/module-01-adversarial-ml      # or module-02-data-security (see its README)
 pip install -r requirements.txt
 jupyter lab
 ```
@@ -51,6 +73,7 @@ jupyter lab
 ### Good to know
 
 * **Datasets download on first use** (MNIST, Fashion-MNIST, SST-2, about 45 MB) into a `data/` folder next to the notebooks. Several mirrors are tried.
+  Module 2 generates its synthetic dataset locally instead.
 * **Notebooks are saved with their outputs**, so you can read the results on GitHub without running anything.
 * **No GPU required.** Every experiment is sized to run on a normal laptop.
 
@@ -67,13 +90,21 @@ the text explains what each number means, and what it does **not** mean.
 secai-course/
 ├── README.md
 ├── LICENSE
-└── module-01-adversarial-ml/
-    ├── README.md                 ← teaching notes and parameters
-    ├── 01_adversarial_examples_images.ipynb
-    ├── 02_adversarial_text.ipynb
-    ├── 03_backdoor_mnist.ipynb
-    ├── 04_membership_inference.ipynb
-    ├── secai_utils.py            ← data loaders, small models, train/eval helpers
+├── module-01-adversarial-ml/
+│   ├── README.md                 ← teaching notes and parameters
+│   ├── 01_adversarial_examples_images.ipynb
+│   ├── 02_adversarial_text.ipynb
+│   ├── 03_backdoor_mnist.ipynb
+│   ├── 04_membership_inference.ipynb
+│   ├── secai_utils.py            ← data loaders, small models, train/eval helpers
+│   └── requirements.txt
+└── module-02-data-security/
+    ├── README.md                 ← dataset, tools, teaching notes
+    ├── 01_inventory_and_pii.ipynb
+    ├── 02_representation_and_bias.ipynb
+    ├── 03_provenance_and_integrity.ipynb
+    ├── 04_data_risk_report.ipynb
+    ├── northvale.py              ← synthetic dataset generator (seed 42)
     └── requirements.txt
 ```
 
@@ -82,7 +113,8 @@ secai-course/
 Each notebook ends with the papers it reproduces. The main ones: Goodfellow et al. 2015 (FGSM) · Madry et al. 2018 (PGD, adversarial training) ·
 Papernot et al. 2016–17 (transferability) · Athalye, Carlini & Wagner 2018 (obfuscated gradients) · Li et al. 2019 (TextBugger) ·
 Wallace et al. 2019 (universal triggers) · Castagnaro et al. 2025 (PhantomText) · Gu et al. 2017 (BadNets) · Gao et al. 2019 (STRIP) ·
-Shokri et al. 2017 and Carlini et al. 2022 (membership inference, LiRA).
+Shokri et al. 2017 and Carlini et al. 2022 (membership inference, LiRA) · Sweeney 2002 (k-anonymity) ·
+Feldman et al. 2015 (disparate impact) · Agarwal et al. 2018 (fair classification) · Gebru et al. 2021 (datasheets for datasets).
 
 ## License
 

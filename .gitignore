@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+data_risk_report.md
+northvale_profile.html
