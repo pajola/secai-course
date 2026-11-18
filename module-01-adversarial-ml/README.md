@@ -3,27 +3,19 @@
 Four self-contained notebooks on what adversarial attacks are, how they work, how they transfer between models,
 and what defenses do (and don't do).
 
-### 1 · Adversarial examples on images
-
-<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/01_adversarial_examples_images.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+### 1 · Adversarial examples on images &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/01_adversarial_examples_images.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 
 FGSM and PGD on an MNIST CNN and the accuracy-vs-ε curve · untargeted vs targeted attacks side by side · **transferability matrix** across 3 models · adversarial training · a binarization defense evaluated adaptively (BPDA) · **gradient masking**: a saturated softmax that looks robust until a logit-margin loss breaks it · [`01_adversarial_examples_images.ipynb`](01_adversarial_examples_images.ipynb)
 
-### 2 · Adversarial examples on text
-
-<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/02_adversarial_text.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+### 2 · Adversarial examples on text &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/02_adversarial_text.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 
 SST-2 sentiment classifier · TextBugger-style typo and homoglyph attack (white-box vs black-box word importance) · **universal triggers** · transfer to Naive Bayes, bigram and char-n-gram models · defenses: char n-grams, **[PhantomText](https://github.com/lucapajola/PhantomText)** detection and sanitisation + spell-correction, and random augmentation (which fails) · [`02_adversarial_text.ipynb`](02_adversarial_text.ipynb)
 
-### 3 · Backdoors
-
-<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/03_backdoor_mnist.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+### 3 · Backdoors &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/03_backdoor_mnist.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 
 BadNets: a white-square trigger sends any digit to class 0 · clean accuracy unchanged, attack success ≈ 100% · how much poison is needed (20 samples suffice) · **STRIP** detection at run time · [`03_backdoor_mnist.ipynb`](03_backdoor_mnist.ipynb)
 
-### 4 · Membership inference
-
-<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/04_membership_inference.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+### 4 · Membership inference &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/04_membership_inference.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 
 An overfit Fashion-MNIST MLP · loss-threshold attack · Shokri shadow-model attack · **LiRA** (per-example calibration, real TPR at low FPR) · defenses: early stopping and more data · [`04_membership_inference.ipynb`](04_membership_inference.ipynb)
 
