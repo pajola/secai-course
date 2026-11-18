@@ -8,12 +8,29 @@ The security code is written out by hand (no ART, no TextAttack), so every attac
 
 ## Module 1 — Adversarial Machine Learning
 
-| Notebook | | What you will see |
-|---|---|---|
-| **1 · Adversarial examples on images**<br>[`01_adversarial_examples_images.ipynb`](module-01-adversarial-ml/01_adversarial_examples_images.ipynb) | <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/01_adversarial_examples_images.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" height="32"></a> | FGSM and PGD, untargeted vs targeted attacks, **transferability**, adversarial training, gradient masking. An MNIST CNN drops from 98% to 2% accuracy under PGD (ε = 0.2). |
-| **2 · Adversarial examples on text**<br>[`02_adversarial_text.ipynb`](module-01-adversarial-ml/02_adversarial_text.ipynb) | <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/02_adversarial_text.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" height="32"></a> | Typo and homoglyph attacks, **universal triggers**, detection and sanitisation with [PhantomText](https://github.com/lucapajola/PhantomText). Three edits flip 67% of sentiment predictions. |
-| **3 · Backdoors**<br>[`03_backdoor_mnist.ipynb`](module-01-adversarial-ml/03_backdoor_mnist.ipynb) | <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/03_backdoor_mnist.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" height="32"></a> | BadNets data poisoning and **STRIP** detection. 20 poisoned images (0.1% of the data) plant a backdoor that works 91% of the time, with no drop in clean accuracy. |
-| **4 · Membership inference**<br>[`04_membership_inference.ipynb`](module-01-adversarial-ml/04_membership_inference.ipynb) | <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/04_membership_inference.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" height="32"></a> | Loss-threshold, shadow-model and **LiRA** attacks: was this sample in the training set? LiRA finds 10.6% of members at 1% false positives, vs 1.6% for a simple threshold. |
+### 1 · Adversarial examples on images
+
+<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/01_adversarial_examples_images.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+
+FGSM and PGD, untargeted vs targeted attacks, **transferability**, adversarial training, gradient masking. An MNIST CNN drops from 98% to 2% accuracy under PGD (ε = 0.2). · [`01_adversarial_examples_images.ipynb`](module-01-adversarial-ml/01_adversarial_examples_images.ipynb)
+
+### 2 · Adversarial examples on text
+
+<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/02_adversarial_text.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+
+Typo and homoglyph attacks, **universal triggers**, detection and sanitisation with [PhantomText](https://github.com/lucapajola/PhantomText). Three edits flip 67% of sentiment predictions. · [`02_adversarial_text.ipynb`](module-01-adversarial-ml/02_adversarial_text.ipynb)
+
+### 3 · Backdoors
+
+<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/03_backdoor_mnist.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+
+BadNets data poisoning and **STRIP** detection. 20 poisoned images (0.1% of the data) plant a backdoor that works 91% of the time, with no drop in clean accuracy. · [`03_backdoor_mnist.ipynb`](module-01-adversarial-ml/03_backdoor_mnist.ipynb)
+
+### 4 · Membership inference
+
+<a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/04_membership_inference.ipynb"><img src="https://img.shields.io/badge/Open%20in%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open in Colab" width="260"></a>
+
+Loss-threshold, shadow-model and **LiRA** attacks: was this sample in the training set? LiRA finds 10.6% of members at 1% false positives, vs 1.6% for a simple threshold. · [`04_membership_inference.ipynb`](module-01-adversarial-ml/04_membership_inference.ipynb)
 
 Every notebook follows the same structure: **threat model → attack → measure → defend → attack the defense**, and ends with take-aways and the original papers.
 The [module README](module-01-adversarial-ml/README.md) has a suggested order for teaching it and the parameters worth changing.
