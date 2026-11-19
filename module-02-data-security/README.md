@@ -7,7 +7,7 @@ applications. Before anything reaches a training pipeline, the AI security team 
 
 Column inventory and pattern scan · PII hidden in free text: IBANs validated with mod-97, health data (GDPR Art. 9), ID-document scans, third-party names ·
 the same job with **Microsoft Presidio**, including what it misses and custom recognisers · classification and minimisation ·
-**linkage attack**: 50 of 50 "de-identified" applicants re-identified, then k-anonymity and l-diversity with **pycanon** · [`01_inventory_and_pii.ipynb`](01_inventory_and_pii.ipynb)
+**linkage attack**: 50 of 50 "de-identified" applicants re-identified, then k-anonymity and l-diversity · [`01_inventory_and_pii.ipynb`](01_inventory_and_pii.ipynb)
 
 ### 2 · Representation and bias audit &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-02-data-security/02_representation_and_bias.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 
@@ -66,7 +66,6 @@ Each check is first written by hand, then compared with a widely used tool:
 | [Faker](https://faker.readthedocs.io) | synthetic identities | dataset |
 | [Microsoft Presidio](https://microsoft.github.io/presidio/) | PII detection and redaction | 1 |
 | [python-stdnum](https://arthurdejong.org/python-stdnum/) | IBAN validation | 1 |
-| [pycanon](https://github.com/IFCA-Advanced-Computing/pycanon) | k-anonymity, l-diversity | 1 |
 | [Fairlearn](https://fairlearn.org) | group metrics, fairness-constrained training | 2 |
 | [pandera](https://pandera.readthedocs.io) | schema and data-quality checks | 3 |
 | [cryptography](https://cryptography.io) | Ed25519 manifest signatures | 3 |

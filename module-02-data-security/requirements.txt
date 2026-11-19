@@ -6,7 +6,6 @@ faker
 presidio-analyzer
 presidio-anonymizer
 python-stdnum
-pycanon
 fairlearn
 pandera
 cryptography
