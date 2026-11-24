@@ -16,8 +16,8 @@ from rich.table import Table
 BASE = "http://127.0.0.1:8000"
 MARCO = "key-marco"        # junior credit analyst: public, staff, customer
 LOADTEST = "key-loadtest"  # a script with a valid key
-SALARIES = re.compile(r"58[.,]?400|71[.,]?200|46[.,]?300")
-IBAN = re.compile(r"IT\d{2}[A-Z]\d{22}")
+SALARIES = re.compile(r"58[.,\s]?400|71[.,\s]?200|46[.,\s]?300")  # 58,400 / 58.400 / 58 400 / 58400
+IBAN = re.compile(r"IT\d{2} ?[A-Z](?: ?\d){22}")                     # with or without spaces
 
 client = httpx.Client(base_url=BASE, timeout=300)
 VERSION = "v0"

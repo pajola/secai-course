@@ -13,7 +13,7 @@ SST-2 sentiment classifier · TextBugger-style typo and homoglyph attack (white-
 
 ### 3 · Backdoors &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/03_backdoor_mnist.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 
-BadNets: a white-square trigger sends any digit to class 0 · clean accuracy unchanged, attack success ≈ 100% · how much poison is needed (20 samples suffice) · **STRIP** detection at run time · [`03_backdoor_mnist.ipynb`](03_backdoor_mnist.ipynb)
+BadNets: a white-square trigger sends any digit to class 0 · clean accuracy unchanged, attack success ≈ 100% at 5% poisoning · how much poison is needed (20 samples already give 91%) · **STRIP** detection at run time · [`03_backdoor_mnist.ipynb`](03_backdoor_mnist.ipynb)
 
 ### 4 · Membership inference &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/04_membership_inference.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 

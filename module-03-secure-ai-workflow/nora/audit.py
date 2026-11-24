@@ -20,5 +20,5 @@ audit = structlog.get_logger()
 
 
 def record(user: str, message: str, decision: str, **fields) -> None:
-    prompt, _ = redact(message[:300])
-    audit.info("chat_request", user=user, decision=decision, prompt=prompt, **fields)
+    prompt, _ = redact(message)  # redact first, then cut: a cut could split an IBAN and hide it from the detector
+    audit.info("chat_request", user=user, decision=decision, prompt=prompt[:300], **fields)

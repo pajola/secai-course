@@ -18,7 +18,7 @@ Typo and homoglyph attacks, **universal triggers**, detection and sanitisation w
 
 ### 3 · Backdoors &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/03_backdoor_mnist.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 
-BadNets data poisoning and **STRIP** detection. 20 poisoned images (0.1% of the data) plant a backdoor that works 91% of the time, with no drop in clean accuracy. · [`03_backdoor_mnist.ipynb`](module-01-adversarial-ml/03_backdoor_mnist.ipynb)
+BadNets data poisoning and **STRIP** detection. At 5% poisoning the backdoor works ≈100% of the time; even 20 poisoned images (0.1% of the data) reach 91%, with no drop in clean accuracy. · [`03_backdoor_mnist.ipynb`](module-01-adversarial-ml/03_backdoor_mnist.ipynb)
 
 ### 4 · Membership inference &nbsp; <a href="https://colab.research.google.com/github/pajola/secai-course/blob/main/module-01-adversarial-ml/04_membership_inference.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" width="150" align="center"></a>
 

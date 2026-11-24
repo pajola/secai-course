@@ -1,6 +1,7 @@
 # Module 3 — Secure AI Workflow: hardening Nora, one trust boundary at a time
 
-SecAI+ (CY0-001) · Module 6 · Submodule 6.6 "Hands-On Demo: Secure AI Workflow" · Exam objectives 2.2, 2.3, 2.4 (applied)
+Recorded demo for the CompTIA SecAI+ (CY0-001) e-learning course: Module 6 · Submodule 6.6 "Hands-On Demo: Secure AI Workflow" · Exam objectives 2.2, 2.3, 2.4 (applied).
+Module and section numbers in this README (6.x, M05, M09) follow that course, not this repository.
 
 Northvale Lending (fictional, continuing from module 2) ships **Nora**, an internal RAG assistant over
 four document classes: `public`, `staff`, `hr`, `customer`. We start fully exposed and add one
@@ -20,7 +21,7 @@ Unlike modules 1–2 this is not a notebook: it is a small FastAPI service with 
 Each version in `versions/` is a complete chatbot, and `serve.py` runs all of them side by side. Controls live once in `nora/`;
 version N imports one more of them than version N-1 (look for `# NEW` comments).
 
-| Version | Boundary | Control | Library | Blocks | Ties to |
+| Version | Boundary | Control | Library | Blocks | SecAI+ section |
 |---|---|---|---|---|---|
 | `v0_naked` | — | Naked: FastAPI + Ollama + Chroma | — | 0/8 | — |
 | `v1_gateway` | user → gateway | API-key auth, rate limit (10/min), token limit (1,000) | `limits`, `tiktoken` | A1 A2 A3 | 6.4 |
@@ -86,11 +87,14 @@ Then open the new control module once (e.g. `nora/firewall.py`) to show how the 
    The model resisting is luck, not a control: a different model, a model update or a reworded payload, and it falls. Like a failed login, the attempt must still be caught and logged.
 2. **v1:** the gateway stops anonymous, flooding and oversized requests, and nothing about content.
 3. **v2:** Prompt Guard blocks the classic injection (A4, score 0.996) and lets the paraphrase through (A8, 0.002).
-4. **v3:** retrieved text is untrusted input too. The chunk scan drops the poisoned document. Show the sentence-level scan in `nora/firewall.py`:
+4. **v3:** retrieved text is untrusted input too. The chunk scan drops the poisoned document.
+   (Here each of the 5 short documents is stored as a single chunk, so the scan checks whole documents; with real documents you would split them into chunks first.) Show the sentence-level scan in `nora/firewall.py`:
    scored as a whole, the poisoned document gets 0.021 because the normal policy text dilutes the injection; sentence by sentence, 0.998.
 5. **v4:** least privilege at retrieval. A6 and A8 are blocked: no prompt can leak what the model never sees.
 6. **v5:** Presidio redacts the IBAN on the way out.
-7. **v6:** `tail -n 20 logs/audit.jsonl | jq .`: the A4 block line, the A8 allow line, and A5's `dropped_chunks`. No PII in the log.
+7. **v6:** `tail -n 20 logs/audit.jsonl | jq .`: the A4 block line, the A8 allow line, and A5's `dropped_chunks`.
+   Prompts are redacted before logging: no IBANs, emails, phone or card numbers. Names are still logged ("Giulia Conti" in A6), because `ENTITIES`
+   in `nora/sanitize.py` doesn't include `PERSON`. Ask the class: should it? Redacting names makes the log safer but harder to investigate.
 
 Useful extra shots:
 - **Legitimate use still works (v4+):** `curl -s localhost:8000/v4/chat -H 'X-API-Key: key-giulia' -H 'content-type: application/json' -d '{"message":"What is Elena Fontana salary?"}'`. HR can see salaries, but HR can't see customer files.
