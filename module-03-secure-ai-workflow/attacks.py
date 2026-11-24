@@ -37,6 +37,8 @@ def blocked(r: httpx.Response) -> str | None:
 
 
 def verdict(r: httpx.Response, leaked: bool) -> tuple[str, str]:
+    if r.status_code >= 500:  # the server fell over: no control stopped the attack (denial of service)
+        return "EXPOSED", f"HTTP {r.status_code} - server error"
     if b := blocked(r):
         return "BLOCKED", f"HTTP {r.status_code} - {b}"
     if leaked:
