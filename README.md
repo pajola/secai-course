@@ -49,6 +49,14 @@ Every check in one `audit()`: **BLOCKED**, remediation, then **APPROVED WITH CON
 
 The [module README](module-02-data-security/README.md) describes the dataset, the open-source tools used and a suggested teaching order.
 
+## Module 3 — Secure AI Workflow
+
+**Nora**, Northvale's internal RAG chatbot (FastAPI + Ollama + Chroma), hardened one trust boundary at a time. Seven versions run side by side,
+from naked (0/8 attacks blocked) to fully hardened (8/8): API gateway, **Llama Prompt Guard 2** on input and on retrieved documents,
+permission-aware retrieval, **Presidio** output redaction and a structured audit trail. A paraphrased injection gets past the prompt firewall,
+and least privilege stops it anyway: defense in depth.
+This module runs locally (Ollama, CPU only), not on Colab. See the [module README](module-03-secure-ai-workflow/README.md) for setup and the recording runbook.
+
 *More modules coming soon.*
 
 ## How to run
@@ -98,14 +106,23 @@ secai-course/
 │   ├── 04_membership_inference.ipynb
 │   ├── secai_utils.py            ← data loaders, small models, train/eval helpers
 │   └── requirements.txt
-└── module-02-data-security/
-    ├── README.md                 ← dataset, tools, teaching notes
-    ├── 01_inventory_and_pii.ipynb
-    ├── 02_representation_and_bias.ipynb
-    ├── 03_provenance_and_integrity.ipynb
-    ├── 04_data_risk_report.ipynb
-    ├── northvale.py              ← synthetic dataset generator (seed 42)
-    └── requirements.txt
+├── module-02-data-security/
+│   ├── README.md                 ← dataset, tools, teaching notes
+│   ├── 01_inventory_and_pii.ipynb
+│   ├── 02_representation_and_bias.ipynb
+│   ├── 03_provenance_and_integrity.ipynb
+│   ├── 04_data_risk_report.ipynb
+│   ├── northvale.py              ← synthetic dataset generator (seed 42)
+│   └── requirements.txt
+└── module-03-secure-ai-workflow/
+    ├── README.md                 ← setup and recording runbook
+    ├── versions/                 ← v0_naked.py … v6_audit.py, one control added per version
+    ├── nora/                     ← the controls (gateway, firewall, sanitize, audit) + RAG and LLM
+    ├── data/docs/                ← Nora's 5 documents (one is poisoned)
+    ├── serve.py                  ← all versions in one server
+    ├── attacks.py                ← the 8-attack scoreboard
+    ├── pyproject.toml
+    └── uv.lock
 ```
 
 ## References
