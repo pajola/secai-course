@@ -26,7 +26,7 @@ uv run attacks.py all
 
 Expected: v0 0/8 · v1 3/8 · v2 4/8 · v3 5/8 · v4 7/8 · v5 8/8 · v6 8/8.
 
-> **Rate limit:** from v1 on, each user may send 10 requests per minute to each version. If you suddenly get `429`, wait a minute or restart the server. Right after `attacks.py all`, wait a minute before trying the flood (A2) by hand.
+> **Rate limit:** from v1 on, each user may send 10 requests per minute to each version. **The counters are separate for every user and every version**: Marco's requests to v1 don't use up the load-test script's, or Marco's own requests to v2. If you suddenly get `429`, wait a minute or restart the server. Right after `attacks.py all`, wait a minute before trying the flood (A2) by hand.
 
 **Who is who** (the API keys are in [`nora/gateway.py`](nora/gateway.py)):
 
@@ -35,6 +35,8 @@ Expected: v0 0/8 · v1 3/8 · v2 4/8 · v3 5/8 · v4 7/8 · v5 8/8 · v6 8/8.
 | Marco, junior credit analyst | `key-marco` | public, staff, customer | everything except HR |
 | Giulia, HR manager | `key-giulia` | public, staff, hr | everything except customer files |
 | A load-test script | `key-loadtest` | public | public documents only |
+
+**The attacks use different users on purpose.** A1 sends no key at all, A2 (the flood) is sent by the load-test script, and A3 to A8 are sent by Marco. So the flood uses up only the load-test script's 10 requests, and Marco still has his whole budget for the attacks that follow. One run of the scoreboard sends 12 requests as the load-test script and 6 as Marco, per version.
 
 **The documents** are in [`data/docs/`](data/docs/); the folder name is the classification. One of them, `staff/remote_work_policy.md`, hides an instruction for AI assistants in an HTML comment: that's attack A5.
 
@@ -103,6 +105,8 @@ curl -s localhost:8000/v1/chat -H 'X-API-Key: key-marco' -H 'content-type: appli
 ```
 
 Expect: `413`, `blocked_by: token_limit`. The gateway knows nothing about content: A4 to A8 still work. Scoreboard → **3/8**.
+
+> **Why A3 still gets through the rate check right after the flood:** A2 was sent by the load-test script and A3 by Marco, and each user has their own counter. But the gateway checks the rate *before* the size: if Marco himself had already sent 10 requests to v1 in the last minute, A3 would come back `429 rate_limit` instead of `413 token_limit`. It would still count as blocked, for the wrong reason. Keep an eye on how many requests you send as Marco.
 
 ### v2 · prompt firewall: is this message trying to take over?
 
