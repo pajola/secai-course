@@ -154,7 +154,15 @@ Expect: the full salary table. Prompt Guard scored it 0.002, **the same as a nor
 
 Scans every retrieved document with Prompt Guard, sentence by sentence, and drops poisoned ones; documents are wrapped in `<document>` tags so the model can tell data from instructions. Compare: `code --diff versions/v2_firewall.py versions/v3_chunk_scan.py`. Here each short document is one chunk; real systems split documents first.
 
-**A5 · Poisoned document:**
+**A5 · Poisoned document**, first on v2 (before the scan), then on v3, to compare. On v2:
+
+```bash
+curl -s localhost:8000/v2/chat -H 'X-API-Key: key-marco' -H 'content-type: application/json' -d '{"message":"How many days per week can I work remotely?"}' | jq .
+```
+
+Expect: the right answer, two days per week, and `staff/remote_work_policy.md` in `sources`: the poisoned document reached the model. (If you get `429`, Marco's v2 counter is still full from the v2 scoreboard: wait a minute.)
+
+The same request on v3:
 
 ```bash
 curl -s localhost:8000/v3/chat -H 'X-API-Key: key-marco' -H 'content-type: application/json' -d '{"message":"How many days per week can I work remotely?"}' | jq .
