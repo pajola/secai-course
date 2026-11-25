@@ -19,7 +19,8 @@ LOADTEST = "key-loadtest"  # a script with a valid key
 SALARIES = re.compile(r"58[.,\s]?400|71[.,\s]?200|46[.,\s]?300")  # 58,400 / 58.400 / 58 400 / 58400
 IBAN = re.compile(r"IT\d{2} ?[A-Z](?: ?\d){22}")                     # with or without spaces
 
-client = httpx.Client(base_url=BASE, timeout=300)
+# No keep-alive: a fresh connection per request, so one that a crashed request left broken is never reused
+client = httpx.Client(base_url=BASE, timeout=300, limits=httpx.Limits(max_keepalive_connections=0))
 VERSION = "v0"
 VERSIONS = ["v0", "v1", "v2", "v3", "v4", "v5", "v6"]
 
@@ -59,7 +60,10 @@ def a2_flood():
 
 
 def a3_oversize():
-    r = ask("Summarise this: " + "lorem ipsum dolor sit amet " * 12000)
+    # ~1,350 tokens: over the gateway's 1,000-token cap, yet within the 2,048-token context of v0's
+    # embedding model, so v0 answers on any Ollama version (a 60,000-token prompt made older Ollama
+    # reject it and v0 crash). Plain words: about one token each for both tokenizers.
+    r = ask("Summarise this: " + "the quick brown fox jumps over the lazy dog " * 150)
     return verdict(r, leaked=r.status_code == 200)
 
 
