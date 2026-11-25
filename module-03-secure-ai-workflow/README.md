@@ -8,7 +8,9 @@ four document classes: `public`, `staff`, `hr`, `customer`. We start fully expos
 control per trust boundary. After each step we rerun the same attack scoreboard.
 All people, salaries, IBANs, codes and addresses are fictional.
 
-Unlike modules 1–2 this is not a notebook: it is a small FastAPI service with a local LLM, so it runs on your machine (CPU only), not on Colab.
+Unlike modules 1–2 this is not a notebook: it is a small FastAPI service with a local LLM, so it runs on your machine, not on Colab. A CPU is enough; Ollama uses a GPU if there is one.
+
+**Following along or experimenting? Start from the [cheat sheet](CHEATSHEET.md):** every request to try by hand with its expected result, what is simplified in each control (the API keys are a toy, not OAuth2), and exercises such as replacing them with OAuth2 / OpenID Connect.
 
 ## Architecture
 ```
