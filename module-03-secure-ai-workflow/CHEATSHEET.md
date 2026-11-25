@@ -50,6 +50,8 @@ uv run attacks.py v2
 
 ### v0 · naked
 
+**Goal:** see Nora working, then see that with no controls at all, every attack works.
+
 The whole chatbot is 21 lines: retrieve 3 documents, paste them into the prompt, ask the model. No key, no limits, no checks. Read it: [`versions/v0_naked.py`](versions/v0_naked.py).
 
 Normal use, with no key:
@@ -73,6 +75,8 @@ Expect: the confidential code, `NV-7731`.
 Scoreboard: `uv run attacks.py v0` → **0/8 blocked**. Look at A5: the poisoned document reached the model, which ignored it *this time*. That's luck, not a control.
 
 ### v1 · gateway: who are you, how often, how much?
+
+**Goal:** stop requests with no key, floods and oversized prompts at the door, and see that the gateway can't judge what a message says.
 
 Adds API-key authentication, a rate limit of 10 requests per minute, and a 1,000-token cap on prompts. Code: [`nora/gateway.py`](nora/gateway.py). Compare: `code --diff versions/v0_naked.py versions/v1_gateway.py`.
 
@@ -110,6 +114,8 @@ Expect: `413`, `blocked_by: token_limit`. The gateway knows nothing about conten
 
 ### v2 · prompt firewall: is this message trying to take over?
 
+**Goal:** block messages that try to override Nora's instructions, and see what a classifier can't catch: a polite request, and a paraphrase.
+
 Adds Llama Prompt Guard 2 (22M), a small classifier that scores each message from 0 to 1; above 0.5 it is blocked. Code: [`nora/firewall.py`](nora/firewall.py).
 
 Normal use (score 0.002):
@@ -144,6 +150,8 @@ Expect: the full salary table. Prompt Guard scored it 0.002, **the same as a nor
 
 ### v3 · chunk scan: retrieved text is untrusted input too
 
+**Goal:** treat the documents Nora retrieves as untrusted input and drop the poisoned one, and see what that costs.
+
 Scans every retrieved document with Prompt Guard, sentence by sentence, and drops poisoned ones; documents are wrapped in `<document>` tags so the model can tell data from instructions. Compare: `code --diff versions/v2_firewall.py versions/v3_chunk_scan.py`. Here each short document is one chunk; real systems split documents first.
 
 **A5 · Poisoned document:**
@@ -157,6 +165,8 @@ Expect: `staff/remote_work_policy.md` is gone from `sources`. Scored as a whole,
 **Notice the cost:** the real policy ("two days per week") went with it, and Nora now answers something else (in our run, the office opening hours). A control that silently drops data can break the service. Scoreboard → **5/8**.
 
 ### v4 · least privilege: search only what this user may read
+
+**Goal:** make sure the model only sees what this user may read, and see that this stops A8, which got past the firewall.
 
 The retriever filters documents by the user's groups before anything reaches the model. One `where` filter: `code --diff versions/v3_chunk_scan.py versions/v4_least_privilege.py`.
 
@@ -182,6 +192,8 @@ Expect: no salary; `hr/salaries_2026.md` is never retrieved for Marco. Now rerun
 
 ### v5 · output redaction: check what leaves
 
+**Goal:** catch personal data on its way out of Nora, and see that public data still gets through.
+
 Microsoft Presidio replaces IBANs, card numbers, emails and phone numbers in the answer; public data on the `ALLOW_LIST` stays. Code: [`nora/sanitize.py`](nora/sanitize.py).
 
 Public data passes:
@@ -199,6 +211,8 @@ curl -s localhost:8000/v5/chat -H 'X-API-Key: key-marco' -H 'content-type: appli
 Expect: `<IBAN_CODE>` in the answer and `"redacted": ["IBAN_CODE"]`. Scoreboard → **8/8**.
 
 ### v6 · audit trail: who, what, which control, why
+
+**Goal:** record every decision Nora's controls make, and learn to read the record: what was blocked, what was let through, and why.
 
 Every request, allowed or blocked, becomes one JSON line in `logs/audit.jsonl`, with the prompt redacted before it is written. Code: [`nora/audit.py`](nora/audit.py).
 
