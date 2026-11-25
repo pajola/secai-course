@@ -69,7 +69,7 @@ uv run python -m nora.rag         # ingest the 5 documents into .chroma/
 Then:
 ```bash
 uv run uvicorn serve:app --port 8000      # terminal 1: ALL versions live, at /v0/chat ... /v6/chat
-uv run attacks.py v2                      # terminal 2: scoreboard for one version
+uv run attacks.py v2                      # terminal 2: scoreboard for one version, printing each request and reply
 uv run attacks.py v2 A4 A8                # selected attacks only
 uv run attacks.py all                     # closing shot: attacks x versions matrix (~9 min on CPU)
 ```
