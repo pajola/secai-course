@@ -4,13 +4,17 @@
   uv run attacks.py all         # matrix: every attack x every version
 
 Every attack is a fixed test case. EXPOSED = the attack worked. BLOCKED = a control stopped it.
+For one version, each request is printed as it is sent (who, what) with the server's reply;
+`all` prints one line per attack and the matrix.
 All people, data, codes and addresses are fictional.
 """
 import re
 import sys
+from itertools import groupby
 
 import httpx
 from rich.console import Console
+from rich.markup import escape
 from rich.table import Table
 
 BASE = "http://127.0.0.1:8000"
@@ -23,17 +27,41 @@ IBAN = re.compile(r"IT\d{2} ?[A-Z](?: ?\d){22}")                     # with or w
 client = httpx.Client(base_url=BASE, timeout=300, limits=httpx.Limits(max_keepalive_connections=0))
 VERSION = "v0"
 VERSIONS = ["v0", "v1", "v2", "v3", "v4", "v5", "v6"]
+WHO = {None: "(no key)", MARCO: "marco", LOADTEST: "loadtest"}
+console = Console()
+verbose = True  # print every request and reply; `all` turns it off
 
 
-def ask(message: str, key: str | None = MARCO) -> httpx.Response:
+def ask(message: str, key: str | None = MARCO, show: bool = True) -> httpx.Response:
     headers = {"X-API-Key": key} if key else {}
-    return client.post(f"/{VERSION}/chat", json={"message": message}, headers=headers)
+    r = client.post(f"/{VERSION}/chat", json={"message": message}, headers=headers)
+    if verbose and show:
+        shown = message if len(message) <= 160 else f"{message[:60]}… ({len(message):,} characters)"
+        console.print(f"   [cyan]→ {WHO[key]:<9}[/] \"{escape(shown)}\"")
+        console.print(f"   [cyan]←[/] {escape(reply(r))}")
+    return r
+
+
+def reply(r: httpx.Response) -> str:
+    """The server's answer in one line: the answer and its sources, or what blocked the request."""
+    if r.status_code >= 500:
+        return f"{r.status_code}  server error"
+    body = r.json()
+    if r.status_code >= 400:
+        detail = body.get("detail")
+        return f"{r.status_code}  " + ("  ".join(f"{k}: {v}" for k, v in detail.items()) if isinstance(detail, dict) else str(detail))
+    answer = " ".join(body["answer"].split())
+    answer = answer if len(answer) <= 110 else answer[:110] + "…"
+    return f"{r.status_code}  \"{answer}\"\n             sources: {', '.join(body['sources']) or 'none'}"
 
 
 def blocked(r: httpx.Response) -> str | None:
     if r.status_code >= 400:
         detail = r.json().get("detail", {})
-        return detail.get("blocked_by", str(r.status_code)) if isinstance(detail, dict) else str(r.status_code)
+        if not isinstance(detail, dict):
+            return str(r.status_code)
+        score = f" (score {detail['score']})" if "score" in detail else ""
+        return detail.get("blocked_by", str(r.status_code)) + score
     return None
 
 
@@ -53,7 +81,10 @@ def a1_no_key():
 
 
 def a2_flood():
-    codes = [ask("ping", key=LOADTEST).status_code for _ in range(12)]
+    codes = [ask("ping", key=LOADTEST, show=False).status_code for _ in range(12)]
+    if verbose:  # 12 identical requests: one summary line, e.g. "200 x10, then 429 x2"
+        console.print(f"   [cyan]→ {WHO[LOADTEST]:<9}[/] \"ping\" x 12, as fast as possible")
+        console.print("   [cyan]←[/] " + ", then ".join(f"{c} x{len(list(g))}" for c, g in groupby(codes)))
     if 429 in codes:
         return "BLOCKED", f"HTTP 429 after {codes.index(429)} requests - rate_limit"
     return "EXPOSED", "12/12 requests served"
@@ -117,8 +148,14 @@ def run(attack_ids: set[str]) -> list[tuple]:
     for aid, name, boundary, fn in ATTACKS:
         if attack_ids and aid not in attack_ids:
             continue
-        console.print(f"[dim]{VERSION} {aid} {name}...[/]")
-        rows.append((aid, name, boundary, *fn()))
+        if not verbose:
+            console.print(f"[dim]{VERSION} {aid} {name}...[/]")
+            rows.append((aid, name, boundary, *fn()))
+            continue
+        console.print(f"\n[bold]{VERSION} {aid} {name}[/]  [dim]{boundary}[/]")
+        result, evidence = fn()
+        console.print(f"   = {styled(result)}  [dim]{escape(evidence)}[/]")
+        rows.append((aid, name, boundary, result, evidence))
     return rows
 
 
@@ -127,10 +164,10 @@ def styled(result: str) -> str:
 
 
 if __name__ == "__main__":
-    console = Console()
     target, only = (sys.argv[1] if len(sys.argv) > 1 else "v0"), set(sys.argv[2:])
 
     if target == "all":
+        verbose = False
         results = {}
         for VERSION in VERSIONS:
             results[VERSION] = run(only)
@@ -149,4 +186,5 @@ if __name__ == "__main__":
         for aid, name, boundary, result, evidence in rows:
             table.add_row(aid, name, boundary, styled(result), evidence)
         table.add_row("", "[bold]Blocked[/]", "", f"[bold]{sum(r[3] == 'BLOCKED' for r in rows)}/{len(rows)}[/]", "")
+        console.print()
     console.print(table)
